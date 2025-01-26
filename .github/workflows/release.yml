@@ -34,7 +34,8 @@ jobs:
         run: dotnet build Stringer.Nuget/Stringer.Nuget.sln --configuration Release --no-restore
 
       - name: Run NUnit Tests
-        run: dotnet test Stringer.Nuget.Tests/Stringer.Nuget.Tests.csproj --no-build --configuration Release --logger "trx;LogFileName=TestResults/test-results.trx"
+        working-directory: Stringer.Nuget.Tests
+        run: dotnet test Stringer.Nuget.Tests.csproj --no-build --configuration Release --logger "trx;LogFileName=TestResults/test-results.trx"
 
       - name: Publish Test Results
         uses: actions/upload-artifact@v3
