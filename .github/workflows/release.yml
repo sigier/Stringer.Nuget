@@ -34,13 +34,13 @@ jobs:
         run: dotnet build Stringer.Nuget/Stringer.Nuget.sln --configuration Release --no-restore
 
       - name: Run NUnit Tests
-        run: dotnet test Stringer.Nuget/Stringer.Nuget.Tests.csproj --no-build --configuration Release --logger "trx;LogFileName=TestResults/test-results.trx"
+        run: dotnet test Stringer.Nuget.Tests/Stringer.Nuget.Tests/Stringer.Nuget.Tests.csproj --no-build --configuration Release --logger "trx;LogFileName=TestResults/test-results.trx"
 
       - name: Publish Test Results
         uses: actions/upload-artifact@v3
         with:
           name: nunit-test-results
-          path: Stringer.Nuget.Tests/TestResults/test-results.trx
+          path: Stringer.Nuget.Tests/Stringer.Nuget.Tests/TestResults/test-results.trx
 
       - name: Ensure nupkg directory exists
         run: mkdir -p ./nupkg
