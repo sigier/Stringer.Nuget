@@ -1,0 +1,51 @@
+name: Build and Publish Stringer NuGet Package with Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install essential tools
+        run: |
+          apt-get update
+          apt-get install -y curl wget
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore Stringer.Nuget.sln
+
+      - name: Build the solution
+        run: dotnet build Stringer.Nuget.sln --configuration Release --no-restore
+
+      - name: Run NUnit Tests
+        run: dotnet test Stringer.Nuget.Tests/Stringer.Nuget.Tests.csproj --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: nunit-test-results
+          path: Stringer.Nuget.Tests/TestResults/test-results.trx
+
+      - name: Pack the project
+        run: dotnet pack Stringer.Nuget/Stringer.Nuget.csproj --configuration Release --output ./nupkg
+
+      - name: Publish package to GitHub Packages
+        run: dotnet nuget push ./nupkg/*.nupkg --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload NuGet package artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: nuget-package
+          path: ./nupkg/*.nupkg

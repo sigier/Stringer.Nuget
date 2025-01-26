@@ -1,0 +1,111 @@
+# Ignore Visual Studio specific files
+.vs/
+*.user
+*.suo
+*.vssscc
+*.cache
+*.pdb
+*.opendb
+
+# Ignore build results
+bin/
+obj/
+out/
+*.log
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.assets.json
+global.json
+
+# Ignore test result files
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+*.testresults
+*.trx
+*.vsmdi
+
+# Ignore build artifacts
+*.dll
+*.exe
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.wsp
+
+# Ignore Rider and JetBrains specific files
+.idea/
+*.sln.iml
+
+# Ignore temporary files
+*.tmp
+*.bak
+*.swp
+*~$
+
+# Ignore dependency logs and lock files
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+node_modules/
+
+# Ignore environment and configuration files
+*.env
+secrets.json
+appsettings*.json
+!appsettings.json      # Allow the default appsettings.json file to be tracked
+config.json
+*.config
+
+# Ignore GitHub workflow logs
+.github/workflows/*.log
+.github/workflows/*.cache
+
+# Ignore Docker related files
+docker-compose.override.yml
+docker-compose.debug.yml
+.dockerignore
+
+# Ignore deployment files
+*.publishsettings
+*.pubxml
+*.pubxml.user
+
+# Ignore generated files
+Generated_Code/
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore Windows specific files
+Thumbs.db
+Desktop.ini
+
+# Ignore Linux specific files
+*~
+
+# Ignore log and error files
+*.log
+*.trace
+
+# Ignore ReSharper files
+_ReSharper*/
+*.DotSettings.user
+
+# Ignore tooling files
+*.vsix
+*.vsconfig
+*.vscode/
+*.sln.docstates
+
+# Ignore secrets
+secrets/
+secrets.json
+config/secrets.json
