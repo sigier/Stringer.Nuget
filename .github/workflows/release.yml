@@ -15,8 +15,8 @@ jobs:
 
       - name: Install essential tools
         run: |
-          apt-get update
-          apt-get install -y curl wget
+          sudo apt-get update
+          sudo apt-get install -y curl wget
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -24,12 +24,13 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore dependencies
-        run: dotnet restore Stringer.Nuget.sln
+        run: dotnet restore Stringer.Nuget/Stringer.Nuget.sln
 
       - name: Build the solution
-        run: dotnet build Stringer.Nuget.sln --configuration Release --no-restore
+        run: dotnet build Stringer.Nuget/Stringer.Nuget.sln --configuration Release --no-restore
 
       - name: Run NUnit Tests
+        working-directory: Stringer.Nuget.Tests
         run: dotnet test Stringer.Nuget.Tests/Stringer.Nuget.Tests.csproj --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish Test Results
@@ -38,11 +39,20 @@ jobs:
           name: nunit-test-results
           path: Stringer.Nuget.Tests/TestResults/test-results.trx
 
+      - name: Ensure nupkg directory exists
+        run: mkdir -p ./nupkg
+
       - name: Pack the project
-        run: dotnet pack Stringer.Nuget/Stringer.Nuget.csproj --configuration Release --output ./nupkg
+        working-directory: Stringer.Nuget
+        run: |
+          dotnet pack Stringer.Nuget/Stringer.Nuget.csproj --configuration Release --output ./nupkg
+          find . -name "*.nupkg"
+
+      - name: Debug package output
+        run: find . -name "*.nupkg" || echo "No packages found"
 
       - name: Publish package to GitHub Packages
-        run: dotnet nuget push ./nupkg/*.nupkg --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget push ./Stringer.Nuget/nupkg/*.nupkg --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key ${{ secrets.NUGET_KEY }}
 
       - name: Upload NuGet package artifact
         uses: actions/upload-artifact@v3
